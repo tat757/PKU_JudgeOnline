@@ -1,7 +1,7 @@
 /*PKU Judge Online 1001	*/
 /*From: 	Yinsong Xu	*/
 /*Begin: 	Oct 15,2014	*/
-/*End:					*/
+/*End:		Oct 26,2014	*/
 /*Version:	1.0			*/
 /*This version will use the most stupid way to make the goal as fast as I can*/
 
@@ -75,10 +75,11 @@ int main(){
 					if(result[i][k+l]>=10){						//Set less than 10 to avoid the number too large than the computer could store 
 						result[i][k+l+1]+=result[i][k+l]/10;
 						result[i][k+l]%=10;
-						digitResult[i]++;
 					}
 				}
-				digitResult[i]+=k;
+				if(digitResult[i]<MAX_RESULT_DIGIT){					//To avoid the digitResult larger than MAX_RESULT_DIGIT
+					digitResult[i]=k+l;
+				}
 			}
 			//printf("\n");
 			for(m=digitResult[i];m>=0;m--){
@@ -87,26 +88,26 @@ int main(){
 			}
 			//printf("\n");
 		}
-		point[i]=point[i]*power[i];
+		point[i]=(digitBase[i]-point[i])*power[i];
 	}
-/*
-	for(i=0; i<NUM_INPUT; i++){										//make the number less than 10
-		for(j=0;j<MAX_RESULT_DIGIT;j++){
-			if(result[i][j]>=10){
-				result[i][j+1]+=result[i][j]/10;
-				result[i][j]%=10;
-			}
-		}
-	}
-*/
 	//printf("\npass calculations\n");
 	for( i=0;i<NUM_INPUT;i++){									
-		check=0;													
+		check=0;
+		m=0;													
 		for( j=MAX_RESULT_DIGIT-1;j>=0;j--){
 			if(check==1){
-				printf("%d",result[i][j]);
-				if(j==point[i]){
-					printf(".");
+				if(result[i][j]==0){							//To remove the zero at the end of result numbers
+					m++;
+				}
+				else{
+					for(k=0;k<m;k++){
+						printf("0");
+					}
+					printf("%d",result[i][j]);
+					if(j==point[i]){
+						printf(".");
+					}
+					m=0;
 				}
 			}
 			else if(result[i][j]!=0){							//print the result start with a non-zero number
@@ -116,8 +117,12 @@ int main(){
 				}
 				check=1;
 			}
+			else if(j==point[i]){							//This one is for the number less than one
+				printf(".");
+				check=1;
+			}
 		}
-		printf("\n\n\n");
+		printf("\n");
 	}
 	return 0;
 }
