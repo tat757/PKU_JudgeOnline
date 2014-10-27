@@ -1,8 +1,8 @@
-PKU_JudgeOnline_1001
+PKU_JudgeOnline
 ====================
 
-The solution of the 1001 problem of PKU judge online system
-
-ATTENTION! This solution couldn't pass the judge online system yet, but it works.
+The solution of the following problems of PKU judge online system
+1000
+1001
 
 
