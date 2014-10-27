@@ -30,6 +30,7 @@ int main(){
 	int digitResult[NUM_INPUT];					//To save the digits of result
 	int i,j,k,l,m;							//To use for the loops
 	int check;
+	int pointCheck[NUM_INPUT];
 	/*To get the inputs*/
 	for( i=0; i<NUM_INPUT; i++){
 		scanf("%s %d", baseStr[i], &power[i]);	//To get inputs
@@ -42,7 +43,9 @@ int main(){
 	//printf("\npass inputs\n");
 	/*Transfer the base numbers from string to integer */
 	for( i=0; i<NUM_INPUT; i++){
-		k=0;										//Use to store the integer
+		k=0;
+		point[i]=0;
+		pointCheck[i]=0;									
 		for( j=digitBase[i]-1; j>=0; j--){					//Loop untill hit the end of the string
 			//printf("%c\n",baseStr[i][j]);
 			if( (baseStr[i][j]<48) || (baseStr[i][j]>57)){//If the character is not a number, exit
@@ -51,6 +54,7 @@ int main(){
 					digitBase[i]--;
 					j--;
 					//printf("point[%d]=%d\n",i,point[i]);
+					pointCheck[i]=1;
 				}
 				else{
 					exit(0);					//else will exit
@@ -88,38 +92,48 @@ int main(){
 			}
 			//printf("\n");
 		}
-		point[i]=(digitBase[i]-point[i])*power[i];
+		if(pointCheck[i]!=0){
+			point[i]=(digitBase[i]-point[i])*power[i];
+		}
 	}
 	//printf("\npass calculations\n");
 	for( i=0;i<NUM_INPUT;i++){									
 		check=0;
-		m=0;													
-		for( j=MAX_RESULT_DIGIT-1;j>=0;j--){
-			if(check==1){
-				if(result[i][j]==0){							//To remove the zero at the end of result numbers
-					m++;
-				}
-				else{
-					for(k=0;k<m;k++){
-						printf("0");
+		m=0;
+		if((baseNum[i][0]==0)&&(digitBase[i]==1)){
+			printf("0");
+		}
+		else if(power[i]==0){
+			printf("1");
+		}
+		else{													
+			for( j=MAX_RESULT_DIGIT-1;j>=0;j--){
+				if(check==1){
+					if(result[i][j]==0){							//To remove the zero at the end of result numbers
+						m++;
 					}
+					else{
+						for(k=0;k<m;k++){
+							printf("0");
+						}
+						printf("%d",result[i][j]);
+						if((j==point[i]) && (point[i]!=0)){
+							printf(".");
+						}
+						m=0;
+					}
+				}
+				else if(result[i][j]!=0){							//print the result start with a non-zero number
 					printf("%d",result[i][j]);
-					if(j==point[i]){
+					if((j==point[i]) && (point[i]!=0)){
 						printf(".");
 					}
-					m=0;
+					check=1;
 				}
-			}
-			else if(result[i][j]!=0){							//print the result start with a non-zero number
-				printf("%d",result[i][j]);
-				if(j==point[i]){
+				else if((j==point[i]) && (point[i]!=0)){							//This one is for the number less than one
 					printf(".");
+					check=1;
 				}
-				check=1;
-			}
-			else if(j==point[i]){							//This one is for the number less than one
-				printf(".");
-				check=1;
 			}
 		}
 		printf("\n");
