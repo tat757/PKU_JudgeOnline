@@ -31,6 +31,7 @@ int main(){
 	int j,k,l,m;							//To use for the loops
 	int check;
 	int pointCheck;
+	int zeroCheck;
 	/*To get the inputs*/
 	while(scanf("%s%d",baseStr,&power)==2){
 		//printf("%s\n",baseStr);
@@ -51,7 +52,7 @@ int main(){
 					digitBase--;
 					j--;
 					//printf("point[%d]=%d\n",i,point);
-					pointCheck=1;
+					pointCheck=1;					//To find out if the input is start from a point or a number
 				}
 				else{
 					exit(0);					//else will exit
@@ -87,13 +88,29 @@ int main(){
 			}
 			//printf("\n");
 		}
+
 		if(pointCheck!=0){
-			point=(digitBase-point)*power;
+			//printf("point=%d\n",point);
+			point=(digitBase-point);
+			//printf("point=%d\n",point);
 		}
-		//printf("\npass calculations\n");									
+		//printf("\npass calculations\n");
+		
+		zeroCheck=0;
+		for(j=point-1; j>=0;j--){						//To remove the zero after the point if there are only zeros after the point
+			if(baseNum[j]!=0){
+				zeroCheck=1;
+				break;
+			}
+		}
+		
+		if(pointCheck!=0){
+			point*=power;
+		}
+
 		check=0;
 		m=0;
-		if((baseNum[0]==0)&&(digitBase==1)){
+		if((baseNum[0]==0)&&(digitBase==1)){		
 			printf("0");
 		}
 		else if(power==0){
@@ -102,7 +119,7 @@ int main(){
 		else{													
 			for( j=MAX_RESULT_DIGIT-1;j>=0;j--){
 				if(check==1){
-					if(result[j]==0){							//To remove the zero at the end of result numbers
+					if((result[j]==0)&&(j<point)){							//To remove the zero at the end of result numbers
 						m++;
 					}
 					else{
@@ -111,6 +128,9 @@ int main(){
 						}
 						printf("%d",result[j]);
 						if((j==point) && (point!=0)){
+							if(zeroCheck==0){
+								break;
+							}
 							printf(".");
 						}
 						m=0;
@@ -119,11 +139,17 @@ int main(){
 				else if(result[j]!=0){							//print the result start with a non-zero number
 					printf("%d",result[j]);
 					if((j==point) && (point!=0)){
+						if(zeroCheck==0){
+							break;
+						}
 						printf(".");
 					}
 					check=1;
 				}
 				else if((j==point) && (point!=0)){							//This one is for the number less than one
+					if(zeroCheck==0){
+						break;
+					}
 					printf(".");
 					check=1;
 				}
