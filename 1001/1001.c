@@ -6,14 +6,14 @@
 /*This version will use the most stupid way to make the goal as fast as I can*/
 
 /*This program is used to be calculate some large number which could be larger than 2^32*/
-/*Input:	six base numbers and the six power numbers of the base numbers*/
-/*Output:	six results of them*/
+/*Input:	a base number and a power number of the base number*/
+/*Output:	the result of them*/
 
 #include <stdio.h>		//basic I/O head file. To use scanf() printf()
 #include <stdlib.h>		//To use exit()
 #include <string.h>		//To use strlen() memset()
 //#define NUM_INPUT 6		//Set the total input number to 6
-#define MAX_DIGIT 200	//Set the max digits of the array which store the input numbers
+#define MAX_DIGIT 200	//Set the max digits of the array which store the input number
 #define MAX_RESULT_DIGIT 200*2+10 		//Set the max digit of result
 
 
@@ -21,7 +21,7 @@
 int main(){
 	/*Set the variables*/
 	char baseStr[MAX_DIGIT];			//To save the base numbers array while user input
-	int power;						//To save the power numbers of the base numbers
+	int power;						//To save the power number of the base number
 	unsigned baseNum[MAX_DIGIT];			//To save the integers of the base number
 	unsigned result[MAX_RESULT_DIGIT];			//To save the results
 	unsigned resultTmp[MAX_RESULT_DIGIT];		//To save the tmp when doing the calculation
