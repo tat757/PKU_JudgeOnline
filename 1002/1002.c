@@ -51,6 +51,7 @@ int main(){
 	int digit;
 	int phoneNumTmp;
 	int numTmp;
+	int changingTmp;
 	struct Data *results=newData();
 	struct Data *tmp;
 	struct Data *newNext;
@@ -62,6 +63,8 @@ int main(){
 		inputs=(char*)malloc((sizeof(char))*MAX_SIZE_INPUTS);	//give memory
 		scanf("%s",inputs);										//get input string
 		inputNum=0;
+		numTmp=1;
+		phoneNumTmp=0;
 		digit=1000000;
 		for( j=0; j<MAX_SIZE_INPUTS; j++){
 			if(inputs[j]=='\0'){
@@ -69,7 +72,7 @@ int main(){
 			}
 			check=0;
 			if((inputs[j]>='A')&&(inputs[j]<'Z')){
-				if(inputs[j]<'Q'){
+				if(inputs[j]<'Q'){	
 					inputNum+=((inputs[j]-'A')/3+2)*digit;
 				}
 				else if(inputs[j]>'Q'){
@@ -83,69 +86,52 @@ int main(){
 			}
 			if(check!=0){
 				digit/=10;
-			}
+			}			//since the 
 		}
 		//printf("inputNum=%d\n",inputNum);
 		if(results->phoneNum==0){
 			results->phoneNum=inputNum;
 			results->num=1;
 		}
-		else if(results->phoneNum==inputNum){
-			results->num++;
-			printf("\n1results->num=%d\n",results->num);
-			printf("results->phoneNum=%d\n\n",results->phoneNum);
-		}
-		else if(results->phoneNum>inputNum){
-			phoneNumTmp=results->phoneNum;
-			results->phoneNum=inputNum;
-			inputNum=phoneNumTmp;
-			numTmp=results->num;
-			results->num=1;
-		}
 		else{
 			check=0;
 			tmp=malloc(sizeof(struct Data));
 			tmp=results;
-			if(tmp->phoneNum>inputNum){
-				phoneNumTmp=tmp->phoneNum;
-				tmp->phoneNum=inputNum;
-				inputNum=phoneNumTmp;
-				numTmp=tmp->num;
-				tmp->num=1;
+			if(tmp->phoneNum==inputNum){				//if the phone num is in the database, record it
+				tmp->num++;
+				check=1;
+				//printf("\n2tmp->num=%d\n",tmp->num);
+				//printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
 			}
 			while(tmp->next!=0){
-				tmp=tmp->next;
-				if(tmp->phoneNum==inputNum){				//if the phone num is in the database, record it
+				if((tmp->phoneNum==inputNum)&&check==0){				//if the phone num is in the database, record it
 					tmp->num++;
 					check=1;
-					printf("\n2tmp->num=%d\n",tmp->num);
-					printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
+					//printf("\n2tmp->num=%d\n",tmp->num);
+					//printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
 					break;
 				}
 				else if(tmp->phoneNum>inputNum){
+					//printf("\ntmp->phoneNum(before)=%d\n",tmp->phoneNum);
 					phoneNumTmp=tmp->phoneNum;
 					tmp->phoneNum=inputNum;
 					inputNum=phoneNumTmp;
-					numTmp=tmp->num;
-					tmp->num=1;
-					check=2;
+					//printf("\ntmp->phoneNum(after)=%d\n",tmp->phoneNum);
+					changingTmp=tmp->num;
+					tmp->num=numTmp;
+					numTmp=changingTmp;
 				}
-				printf("\n3tmp->num=%d\n",tmp->num);
-				printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
+				tmp=tmp->next;
+				//printf("\n3tmp->num=%d\n",tmp->num);
+				//printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
 			}
 			if(check==0){									//if it is not in the database, create a new one
 				newNext=newData();
 				newNext->phoneNum=inputNum;
-				newNext->num=1;
-				tmp->next=newNext;
-			}
-			else if(check==2){
-				newNext=newData();
-				newNext->phoneNum=inputNum;
 				newNext->num=numTmp;
 				tmp->next=newNext;
-				printf("\n4tmp->num=%d\n",tmp->num);
-				printf("tmp->phoneNum=%d\n\n",tmp->phoneNum);
+				//printf("\ntmp->phoneNum=%d\n",tmp->phoneNum);
+				//printf("tmp->num=%d\ntmp->next->phoneNum=%d\ntmp->next->num=%d\n\n",tmp->num,tmp->next->phoneNum,tmp->next->num);
 			}
 		}
 		free(inputs);
