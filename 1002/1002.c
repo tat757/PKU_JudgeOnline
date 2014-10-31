@@ -1,7 +1,7 @@
 /*PKU Judge Online problem 1002 */
 /*			Yinsong Xu			*/
-/*Start Date:  Oct, 27	2014	*/
-/*End Date:    					*/
+/*Start Date:  Oct, 27 2014		*/
+/*End Date:    Oct, 29 2014		*/
 /*Version:	   1.0				*/
 
 /*487-3279*/
