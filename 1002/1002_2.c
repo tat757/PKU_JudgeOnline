@@ -34,20 +34,30 @@ struct Data {							//the struct of the data store in the BT
 	int num;
 	int leftWeight;
 	int rightWeight;
-}
+};
 
 struct Tree {
 	struct Data *root;
-}
+	int count;
+};
 
 void initTree(struct Tree *a){
 	a->root=0;
+	a->count=0;
 }
 
 struct Tree* newTree(){
 	struct Tree *a=(struct Tree*)malloc(sizeof(struct Tree*));
 	initTree(a);
 	return a;
+}
+
+void createTree(int inputNum, struct Tree *a){
+	struct Data *first=newData();
+	tree->root=first;
+	tree->coutn=1;
+	first->phoneNum=inputNum;
+	first->num=1;
 }
 
 void initData(struct Data *a){			//To initialize the new struct
@@ -66,7 +76,7 @@ struct Data* newData(){					//a function to save the space in the main
 	return a;
 }
 
-int compare(struct Data *a, int input){
+int compare(struct Data *a, int inputNum){
 	if(a->phoneNum>input){
 		return 1;
 	}
@@ -120,15 +130,34 @@ int strToNum(char* inputStr){
 	return inputNum;
 }
 
+void switchData(struct Data *cur, struct Data *pre, struct Data *tmp){
+
+}
+
+int addData(int inputNum, struct Tree *a){
+	struct Data *tmp=newData();
+	tmp=a->root;
+	while(tmp!=0){
+
+	}
+}
 
 int main(){
 	int numInputs;
 	int inputNum;
 	int i;
 	char *strInputs;
+	struct Tree *results=newTree();
+
 	numInputs=getNumInputs();
 	for(i=0;i<numInputs;i++){
 		strInputs=getStrInputs();
 		inputNum=strToNum(strInputs);
+		if(i==0){
+			createTree(inputNum,results);
+		}
+		else{
+
+		}
 	}
 }
