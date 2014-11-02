@@ -55,7 +55,7 @@ struct Tree* newTree(){
 void createTree(int inputNum, struct Tree *a){
 	struct Data *first=newData();
 	tree->root=first;
-	tree->coutn=1;
+	tree->count=1;
 	first->phoneNum=inputNum;
 	first->num=1;
 }
@@ -76,21 +76,21 @@ struct Data* newData(){					//a function to save the space in the main
 	return a;
 }
 
-int compare(struct Data *a, int inputNum){
-	if(a->phoneNum>input){
+int compare(int num, int inputNum){ 		//To compare two things.
+	if(num>input){
 		return 1;
 	}
-	else if(a->phoneNum==input){
+	else if(num==input){
 		return 0;
 	}
-	else if(a->phoneNum<input){
+	else if(num<input){
 		return -1;
 	}
 }
 
 int getNumInputs(){
 	int numInputs;
-	scanf("%d",numInputs);
+	scanf("%d",&numInputs);
 	return numInputs;
 }
 
@@ -130,15 +130,90 @@ int strToNum(char* inputStr){
 	return inputNum;
 }
 
-void switchData(struct Data *cur, struct Data *pre, struct Data *tmp){
-
+void addData(int inputNum, struct Tree *a){
+	struct Data *tmp=newData();
+	struct Data *newLeaf;
+	int numTemp;
+	int changingTemp;
+	int phoneNumTemp;
+	int check;
+	check=0;
+	tmp=a->root;
+	numTemp=1;
+	changingTemp=0;
+	phoneNumTemp=0;
+	while(tmp!=0){
+		if(compare(tmp->phoneNum,inputNum)==0){
+			tmp->num++;
+			check==1;
+			break;
+		}
+		else if(compare(tmp->phoneNum,inputNum)==1){
+			tmp->leftWeight++;
+			if(tmp->left==0){
+				check=2;
+				break;
+			}
+			tmp=tmp->left;
+		}
+		else if(compare(tmp->phoneNum,inputNum)==-1){
+			if(compare(tmp->leftWeight,tmp->rightWeight)==0){
+				phoneNumTemp=tmp->phoneNum;
+				temp->phoneNum=inputNum;
+				inputNum=phoneNumTemp;
+				changingTemp=tmp->num;
+				tmp->num=numTemp;
+				numTemp=changingTemp;
+			}
+			else if(compare(tmp->leftWeight,tmp->rightWeight)==1){
+				tmp->rightWeight++;
+				if(tmp->right==0){
+					check=3;
+					break;
+				}
+				tmp=tmp->right;
+			}
+		}
+	}
+	if(check!=1){
+		newLeaf=newData();
+		newLeaf->phoneNum=inputNum;
+		newLeaf->num=numTemp;
+		if(check==2){
+			tmp->left=newLeaf;
+		}
+		else if(check==3){
+			tmp->right=newLeaf;
+		}
+		newLeaf->father=tmp;
+		a->count++;
+	}
+	free(tmp);
+	free(newLeaf);
 }
 
-int addData(int inputNum, struct Tree *a){
+void printOutput(struct Tree *a){
+	int total;
 	struct Data *tmp=newData();
+	total=a->count;
 	tmp=a->root;
-	while(tmp!=0){
-
+	while(total!=0){
+		if(tmp->num>1){
+			printf("%d-%d %d\n",tmp->phoneNum/10000,tmp->phoneNum%10000,tmp->num);
+		}
+		if(tmp->num!=0){
+			total--;
+		}
+		tmp->num=0;
+		if(tmp->left){
+			tmp=tmp->left;
+		}
+		else if(tmp->right){
+			tmp=tmp->right;
+		}
+		else if(tmp->father){
+			tmp=tmp->father;
+		}
 	}
 }
 
@@ -157,7 +232,9 @@ int main(){
 			createTree(inputNum,results);
 		}
 		else{
-
+			addData(inputNum,results);
 		}
 	}
+	printOutput(results);
+	return 0;
 }
