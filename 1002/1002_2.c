@@ -52,14 +52,6 @@ struct Tree* newTree(){
 	return a;
 }
 
-void createTree(int inputNum, struct Tree *a){
-	struct Data *first=newData();
-	tree->root=first;
-	tree->count=1;
-	first->phoneNum=inputNum;
-	first->num=1;
-}
-
 void initData(struct Data *a){			//To initialize the new struct
 	a->left=0;
 	a->right=0;
@@ -76,21 +68,31 @@ struct Data* newData(){					//a function to save the space in the main
 	return a;
 }
 
+void createTree(int inputNum, struct Tree *a){
+	struct Data *first=newData();
+	first->phoneNum=inputNum;
+	first->num=1;
+	a->root=first;
+	a->count=1;
+}
+
 int compare(int num, int inputNum){ 		//To compare two things.
-	if(num>input){
+	if(num>inputNum){
 		return 1;
 	}
-	else if(num==input){
+	else if(num==inputNum){
 		return 0;
 	}
-	else if(num<input){
+	else if(num<inputNum){
 		return -1;
 	}
+	return 0;
 }
 
 int getNumInputs(){
 	int numInputs;
 	scanf("%d",&numInputs);
+	printf("numInputs=%d\n",numInputs);
 	return numInputs;
 }
 
@@ -131,7 +133,7 @@ int strToNum(char* inputStr){
 }
 
 void addData(int inputNum, struct Tree *a){
-	struct Data *tmp=newData();
+	struct Data *tmp;
 	struct Data *newLeaf;
 	int numTemp;
 	int changingTemp;
@@ -145,7 +147,7 @@ void addData(int inputNum, struct Tree *a){
 	while(tmp!=0){
 		if(compare(tmp->phoneNum,inputNum)==0){
 			tmp->num++;
-			check==1;
+			check=1;
 			break;
 		}
 		else if(compare(tmp->phoneNum,inputNum)==1){
@@ -159,7 +161,7 @@ void addData(int inputNum, struct Tree *a){
 		else if(compare(tmp->phoneNum,inputNum)==-1){
 			if(compare(tmp->leftWeight,tmp->rightWeight)==0){
 				phoneNumTemp=tmp->phoneNum;
-				temp->phoneNum=inputNum;
+				tmp->phoneNum=inputNum;
 				inputNum=phoneNumTemp;
 				changingTemp=tmp->num;
 				tmp->num=numTemp;
@@ -188,8 +190,6 @@ void addData(int inputNum, struct Tree *a){
 		newLeaf->father=tmp;
 		a->count++;
 	}
-	free(tmp);
-	free(newLeaf);
 }
 
 void printOutput(struct Tree *a){
@@ -197,11 +197,14 @@ void printOutput(struct Tree *a){
 	struct Data *tmp=newData();
 	total=a->count;
 	tmp=a->root;
+	while(tmp->left!=0){
+		tmp=tmp->left;
+	}
 	while(total!=0){
-		if(tmp->num>1){
+		if(tmp->num!=0){
 			printf("%d-%d %d\n",tmp->phoneNum/10000,tmp->phoneNum%10000,tmp->num);
 		}
-		if(tmp->num!=0){
+		if(tmp->num==0){
 			total--;
 		}
 		tmp->num=0;
@@ -230,8 +233,10 @@ int main(){
 		inputNum=strToNum(strInputs);
 		if(i==0){
 			createTree(inputNum,results);
+			printf("results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
 		}
 		else{
+			printf("results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
 			addData(inputNum,results);
 		}
 	}
