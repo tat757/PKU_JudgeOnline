@@ -1,7 +1,7 @@
 /*PKU Judge Online problem 1002 */
 /*			Yinsong Xu			*/
 /*Start Date:  Oct, 30	2014	*/
-/*End Date:    					*/
+/*End Date:    Nov, 02  2014	*/
 /*Version:	   2.0				*/
 /*For the version 1.0, I used structs to store the number which is reorded form users, but it take too many time to do that*/
 /*this version, I will try the ninary tree to try this agian*/
@@ -63,16 +63,16 @@ void initData(struct Data *a){			//To initialize the new struct
 }
 
 struct Data* newData(){					//a function to save the space in the main
-	struct Data *a=(struct Data*)malloc(sizeof(struct Data*));
+	struct Data *a=(struct Data*)malloc(sizeof(struct Data));
 	initData(a);
 	return a;
 }
 
 void createTree(int inputNum, struct Tree *a){
 	struct Data *first=newData();
-	first->phoneNum=inputNum;
-	first->num=1;
 	a->root=first;
+	a->root->phoneNum=inputNum;
+	a->root->num=1;
 	a->count=1;
 }
 
@@ -92,17 +92,15 @@ int compare(int num, int inputNum){ 		//To compare two things.
 int getNumInputs(){
 	int numInputs;
 	scanf("%d",&numInputs);
-	printf("numInputs=%d\n",numInputs);
-	return numInputs;
+	//printf("numInputs=%d\n",numInputs);
+	return numInputs;				//to get the number of inputs
 }
 
-char* getStrInputs(){
-	char* strInputs=(char*)malloc((sizeof(char))*MAX_SIZE_INPUTS);
+void getStrInputs(char* strInputs){		//to get the number
 	scanf("%s",strInputs);
-	return strInputs;
 }
 
-int strToNum(char* inputStr){
+int strToNum(char* inputStr){			//transfer the string to integer
 	int inputNum=0;
 	int digit=1000000;
 	int j;
@@ -132,7 +130,7 @@ int strToNum(char* inputStr){
 	return inputNum;
 }
 
-void addData(int inputNum, struct Tree *a){
+void addData(int inputNum, struct Tree *a){			//add new data to the tree
 	struct Data *tmp;
 	struct Data *newLeaf;
 	int numTemp;
@@ -144,6 +142,7 @@ void addData(int inputNum, struct Tree *a){
 	numTemp=1;
 	changingTemp=0;
 	phoneNumTemp=0;
+	//printf("1a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 	while(tmp!=0){
 		if(compare(tmp->phoneNum,inputNum)==0){
 			tmp->num++;
@@ -151,12 +150,31 @@ void addData(int inputNum, struct Tree *a){
 			break;
 		}
 		else if(compare(tmp->phoneNum,inputNum)==1){
-			tmp->leftWeight++;
-			if(tmp->left==0){
-				check=2;
-				break;
-			}
 			tmp=tmp->left;
+		}
+		else if(compare(tmp->phoneNum,inputNum)==-1){
+			tmp=tmp->right;
+		}
+	}
+	tmp=a->root;
+	while(check==0){
+		if(compare(tmp->phoneNum,inputNum)==1){
+			if(compare(tmp->leftWeight,tmp->rightWeight)==0){
+				tmp->leftWeight++;
+				if(tmp->left==0){
+					check=2;
+					break;
+				}
+				tmp=tmp->left;
+			}
+			else if(compare(tmp->leftWeight,tmp->rightWeight)==1){
+				phoneNumTemp=tmp->phoneNum;
+				tmp->phoneNum=inputNum;
+				inputNum=phoneNumTemp;
+				changingTemp=tmp->num;
+				tmp->num=numTemp;
+				numTemp=changingTemp;
+			}
 		}
 		else if(compare(tmp->phoneNum,inputNum)==-1){
 			if(compare(tmp->leftWeight,tmp->rightWeight)==0){
@@ -178,41 +196,55 @@ void addData(int inputNum, struct Tree *a){
 		}
 	}
 	if(check!=1){
+		//printf("4.5a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		newLeaf=newData();
+		//printf("4.7a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		newLeaf->phoneNum=inputNum;
+		//printf("4.6a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		newLeaf->num=numTemp;
 		if(check==2){
+			//printf("4.4a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 			tmp->left=newLeaf;
+			//printf("4a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		}
 		else if(check==3){
 			tmp->right=newLeaf;
+			//printf("5a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		}
 		newLeaf->father=tmp;
+		//printf("6a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 		a->count++;
+		//printf("count=%d\n",a->count);
 	}
+	//printf("3a->root->phoneNum=%d\na=%p\n",a->root->phoneNum,a->root);
 }
 
-void printOutput(struct Tree *a){
+void printOutput(struct Tree *a){		//print the output
 	int total;
 	struct Data *tmp=newData();
 	total=a->count;
 	tmp=a->root;
-	while(tmp->left!=0){
-		tmp=tmp->left;
-	}
 	while(total!=0){
-		if(tmp->num!=0){
-			printf("%d-%d %d\n",tmp->phoneNum/10000,tmp->phoneNum%10000,tmp->num);
-		}
-		if(tmp->num==0){
-			total--;
-		}
-		tmp->num=0;
-		if(tmp->left){
+		while(tmp->left){
+			if(tmp->left->num==0){
+				break;
+			}
 			tmp=tmp->left;
 		}
+		if(tmp->num!=0){
+			if(tmp->num>1){
+				printf("%d-%d %d\n",tmp->phoneNum/10000,tmp->phoneNum%10000,tmp->num);
+			}
+			tmp->num=0;
+			total--;
+		}
 		else if(tmp->right){
-			tmp=tmp->right;
+			if(tmp->right->num!=0){
+				tmp=tmp->right;
+			}
+			else{
+				tmp=tmp->father;
+			}
 		}
 		else if(tmp->father){
 			tmp=tmp->father;
@@ -229,16 +261,30 @@ int main(){
 
 	numInputs=getNumInputs();
 	for(i=0;i<numInputs;i++){
-		strInputs=getStrInputs();
+		//if(i>0)
+			//printf("1results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+		strInputs=(char*)malloc(sizeof(char)*MAX_SIZE_INPUTS);
+		//if(i>0)
+			//printf("2results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+		getStrInputs(strInputs);
+		//if(i>0)
+			//printf("3results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+		//printf("strInputs=%s\n",strInputs);
+		//printf("sizeof=%d\n",(int)sizeof(strInputs));
 		inputNum=strToNum(strInputs);
+		//if(i>0)
+			//printf("4results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+		//printf("inputNum=%d\n",inputNum);
 		if(i==0){
 			createTree(inputNum,results);
-			printf("results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+			//printf("5results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
 		}
 		else{
-			printf("results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
+			//printf("6results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
 			addData(inputNum,results);
+			//printf("7results->root->phoneNum=%d\na=%p\n",results->root->phoneNum,results->root);
 		}
+		free(strInputs);
 	}
 	printOutput(results);
 	return 0;
