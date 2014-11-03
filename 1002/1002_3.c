@@ -1,7 +1,7 @@
 /*PKU Judge Online problem 1002 */
 /*			Yinsong Xu			*/
 /*Start Date:  Nov, 02 2014		*/
-/*End Date:    					*/
+/*End Date:    Nov, 02 2014		*/
 /*Version:	   3.0				*/
 /*For the last version, I tried some hard way to do this, this time, I will try it by a simple way.*/
 
