@@ -1,7 +1,7 @@
 /*		POJ problem 1008		*/
 /*		Yinsong Xu				*/
 /*Start Date: Nov, 04 2014		*/
-/*End Date: 					*/
+/*End Date:   Nov, 04 2014		*/
 /*Version:  	1.0 			*/
 
 /*Convert the dates from the Haab calendar to the Tzolkin calendar*/
