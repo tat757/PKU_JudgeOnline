@@ -1,7 +1,7 @@
 /*		POJ problem 1007		*/
 /*		Yinsong Xu				*/
 /*Start Date: Nov, 04 2014		*/
-/*End Date: 					*/
+/*End Date:   Nov, 04 2014		*/
 /*Version: 		1.0 			*/
 
 /*To sort the numbers from the most sorted to the least sorted*/
@@ -45,45 +45,54 @@ void calcuInver(struct Data *results, int *digits){
 				results->inversions++;
 			}
 		}
+		//printf("results->inversions=%d\n",results->inversions);
+
 	}
 }
 
 void getInputs(struct Data *results, int *nums, int *digits){			//Get the string data of inputs
 	int i;
+	struct Data *temp=results;
 	for(i=0;i<*nums;i++){
-		results=newData(digits);
-		scanf("%s",results->string);
-		calcuInver(results,digits);
+		scanf("%s",temp->string);
+		//printf("temp->string=%s\n",temp->string);
+		calcuInver(temp,digits);
 		if(*nums!=(i+1)){
-			results=results->next;
+			temp->next=newData(digits);
+			temp=temp->next;
 		}
 	}
 }
 
-void sort(struct Data *results, int *nums, int *digits){
+void sort(struct Data *results, int *nums, int *digits){				//to arrange the sequence	
 	char* stringTemp=(char*)malloc(sizeof(char)*(*digits));
 	int i, j, inverTemp;
+	struct Data *temp;
 	for(i=0;i<*nums;i++){
+		temp=results;
 		for(j=i;j<*nums;j++){
-			if(results->next==0){
+			if(temp->inversions>results->inversions){
+				strcpy(stringTemp,results->string);
+				strcpy(results->string,temp->string);
+				strcpy(temp->string,stringTemp);
+				inverTemp=results->inversions;
+				results->inversions=temp->inversions;
+				temp->inversions=inverTemp;
+			}
+			if(!results->next){
 				break;
 			}
-			else if(results->inversions>results->next->inversions){
-				strcpy(stringTemp,results->string);
-				strcpy(results->string,results->next->string);
-				strcpy(results->next->string,stringTemp);
-				inverTemp=results->inversions;
-				results->inversions=results->next->inversions;
-				results->next->inversions=inverTemp;
-			}
+			results=results->next;
 		}
+		results=temp->next;
 	}
 }
 
-void printOutputs(struct Data *results, int *nums){
+void printOutputs(struct Data *results, int *nums){						//To print the results
 	int i;
 	for(i=0; i<*nums; i++){
 		printf("%s\n",results->string);
+		results=results->next;
 	}
 }
 
@@ -93,6 +102,7 @@ int main(){
 	digits=malloc(sizeof(int));
 	nums=malloc(sizeof(int));
 	getInputsInfor(digits,nums);
+	results=newData(digits);
 	getInputs(results,nums,digits);
 	sort(results,nums,digits);
 	printOutputs(results,nums);
