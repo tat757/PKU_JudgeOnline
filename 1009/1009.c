@@ -12,12 +12,14 @@
 
 #include <stdio.h>			//To use printf() scanf()
 #include <stdlib.h>			//To use malloc()
+#include <math.h>			//To use abs()
 #define MAX_PIXEL 1000
 
 struct Data{												//To store the information of inputs
 	int numInputs;
 	int *pixel;
 	int *pixelNum;
+	int total;
 	struct Data* next;
 };
 
@@ -26,6 +28,7 @@ void initData(struct Data *newD){							//To initialize the struct
 	newD->pixel=malloc(sizeof(int)*MAX_PIXEL);
 	newD->pixelNum=malloc(sizeof(int)*MAX_PIXEL);
 	newD->next=0;
+	newD->total=0;
 }
 
 struct Data *newData(){										//To use for creat a new struct
@@ -45,6 +48,7 @@ void getInputs(struct Data *first){							//To get the inputs and store them to 
 		temp->numInputs=num;
 		scanf("%d%d",temp->pixel[i],temp->pixelNum[i]);
 		while(temp->pixel[i]!=0 && temp->pixelNum[i]!=0){
+			temp->total+=temp->pixelNum[i];
 			i++;
 			scanf("%d%d",temp->pixel[i],temp->pixelNum[i]);
 		}
@@ -64,16 +68,105 @@ void calculation(struct Data *first){
 	struct Data *temp;
 	int *pixelTemp;
 	int *pixelNumTemp;
-	int i,j;
+	int i.iTemp,j;
 	int pointer;
 	int pointerTemp;
-	int min;
+	int max;
 	temp=first;
-	while(1){
+	while(1){												//This loop use for all image
 		i=0;
 		pointer=1;
-		while(1){
-			if(pointer-temp->numInputs-1){
+		max=0;
+		while(1){											//This loop use for one image
+			if(pointer-temp->numInputs-1 && (pointer%temp->numInputs!=1)){
+				pointerTemp=pointer-temp->numInputs-1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if(pointer-temp->numInputs){
+				pointerTemp=pointer-temp->numInputs;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if(pointer-temp->numInputs+1 && (pointer%temp->numInputs!=0)){
+				pointerTemp=pointer-temp->numInputs+1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if(pointer-1 && (pointer%temp->numInputs!=1)){
+				pointerTemp=pointer-1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if((pointer+1)<=temp->total && (pointer%temp->numInputs!=1)){
+				pointerTemp=pointer+1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if((pointer+temp->numInputs-1)<=temp->total && (pointer%temp->numInputs!=0)){
+				pointerTemp=pointer+temp->numInputs-1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if((pointer+temp->numInputs)<=temp->total){
+				pointerTemp=pointer+temp->numInputs;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if((pointer+temp->numInputs+1)<=temp->total && (pointer%temp->numInputs!=1)){
+				pointerTemp=pointer+temp->numInputs+1;
+				iTemp=0;
+				while(pointerTemp>pixelNum[iTemp]){
+					pointerTemp-=pixelNum[iTemp];
+					iTemp++;
+				}
+				if(abs(pixel[i]-pixel[iTemp])>max){
+					max=abs(pixel[i]-pixel[iTemp]);
+				}
+			}
+			if(i==0){
 				
 			}
 		}
