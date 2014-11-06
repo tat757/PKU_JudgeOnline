@@ -14,27 +14,27 @@
 #include <stdlib.h>			//To use malloc()
 #define MAX_PIXEL 1000
 
-struct Data{
+struct Data{												//To store the information of inputs
 	int numInputs;
 	int *pixel;
 	int *pixelNum;
 	struct Data* next;
 };
 
-void initData(struct Data *newD){
+void initData(struct Data *newD){							//To initialize the struct
 	newD->numInputs=0;
 	newD->pixel=malloc(sizeof(int)*MAX_PIXEL);
 	newD->pixelNum=malloc(sizeof(int)*MAX_PIXEL);
 	newD->next=0;
 }
 
-struct Data *newData(){
-	struct Data *new=malloc(sizeof(struct Data));
-	initData(new);
-	return new;
+struct Data *newData(){										//To use for creat a new struct
+	struct Data *newD=malloc(sizeof(struct Data));
+	initData(newD);
+	return newD;
 }
 
-void getInputs(struct Data *first){
+void getInputs(struct Data *first){							//To get the inputs and store them to struct
 	int i,num;
 	struct Data *temp;
 	struct Data *newImage;
@@ -49,13 +49,52 @@ void getInputs(struct Data *first){
 			scanf("%d%d",temp->pixel[i],temp->pixelNum[i]);
 		}
 		scanf("%d",&num);
-		if(num!=0){
+		if(num!=0){											//For each new image create a new struct
 			newImage=newData();
 			temp->next=newImage;
 			temp=temp->next;
 		}
-		else if(num==0){
+		else{
 			break;
 		}
 	}
+}
+
+void calculation(struct Data *first){
+	struct Data *temp;
+	int *pixelTemp;
+	int *pixelNumTemp;
+	int i,j;
+	int pointer;
+	int pointerTemp;
+	int min;
+	temp=first;
+	while(1){
+		i=0;
+		pointer=1;
+		while(1){
+			if(pointer-temp->numInputs-1){
+				
+			}
+		}
+		if(temp->next){
+			temp=temp->next;
+		}
+		else{
+			break;
+		}
+	}
+}
+
+void printOutput(struct Data *first){
+
+}
+
+int main(){
+	struct Data *first;
+	first=newData();
+	getInputs(first);
+	calculation(first);
+	printOutput(first);
+	return 0;
 }
