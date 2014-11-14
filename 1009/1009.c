@@ -1,7 +1,7 @@
 /*		POJ problem 1009		*/
 /*		Yinsong Xu				*/
 /*Start Date: Nov, 05 2014		*/
-/*End Date:						*/
+/*End Date:	Nov, 13 2014		*/
 /*Version: 1.0 					*/
 
 /*for one table, change the number in the table to the largest cap near the point*/
