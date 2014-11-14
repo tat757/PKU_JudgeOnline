@@ -48,7 +48,7 @@ void getInputs(struct Data *first){							//To get the inputs and store them to 
 		i=0;
 		temp->numInputs=num;
 		scanf("%d%d",&temp->pixel[i],&temp->pixelNum[i]);
-		while(temp->pixel[i]!=0 && temp->pixelNum[i]!=0){
+		while(temp->pixelNum[i]!=0){
 			temp->total+=temp->pixelNum[i];
 			i++;
 			scanf("%d%d",&temp->pixel[i],&temp->pixelNum[i]);
@@ -77,23 +77,26 @@ void calculation(struct Data *first){
 	while(1){												//This loop use for all image
 		i=0;
 		iSec=0;
+		pixelTemp=malloc(sizeof(int)*MAX_PIXEL);
+		pixelNumTemp=malloc(sizeof(int)*MAX_PIXEL);
 		pixelTemp[0]=0;
 		pixelNumTemp[0]=0;
 		pointer=1;
-		max=0;
 		while(1){											//This loop use for one image
-			if(pointer-temp->numInputs-1 && (pointer%temp->numInputs!=1)){
+			max=0;
+			if(pointer>temp->numInputs && (pointer%temp->numInputs!=1)){						//If the pointer has up-left number, check it
 				pointerTemp=pointer-temp->numInputs-1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
 					pointerTemp-=temp->pixelNum[iTemp];
 					iTemp++;
 				}
+				//printf("pointerTemp=%d\n i=%d iTemp=%d\n",pointerTemp, i, iTemp);
 				if(abs(temp->pixel[i]-temp->pixel[iTemp])>max){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if(pointer-temp->numInputs){
+			if(pointer>temp->numInputs){														//If the pointer has up number, check it
 				pointerTemp=pointer-temp->numInputs;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -104,7 +107,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if(pointer-temp->numInputs+1 && (pointer%temp->numInputs!=0)){
+			if(pointer>temp->numInputs && (pointer%temp->numInputs!=0)){						//If the pointer has up-right number, check it
 				pointerTemp=pointer-temp->numInputs+1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -115,7 +118,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if(pointer-1 && (pointer%temp->numInputs!=1)){
+			if(pointer-1>0 && (pointer%temp->numInputs!=1)){										//If the pointer has left number, check it
 				pointerTemp=pointer-1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -126,7 +129,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if((pointer+1)<=temp->total && (pointer%temp->numInputs!=1)){
+			if((pointer+1)<=temp->total && (pointer%temp->numInputs!=0)){						//If the pointer has right number , check it
 				pointerTemp=pointer+1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -137,7 +140,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if((pointer+temp->numInputs-1)<=temp->total && (pointer%temp->numInputs!=0)){
+			if((pointer+temp->numInputs-1)<=temp->total && (pointer%temp->numInputs!=1)){		//If the pointer has down-left number, check it
 				pointerTemp=pointer+temp->numInputs-1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -148,7 +151,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if((pointer+temp->numInputs)<=temp->total){
+			if((pointer+temp->numInputs)<=temp->total){											//If the pointer has down number, check it
 				pointerTemp=pointer+temp->numInputs;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -159,7 +162,7 @@ void calculation(struct Data *first){
 					max=abs(temp->pixel[i]-temp->pixel[iTemp]);
 				}
 			}
-			if((pointer+temp->numInputs+1)<=temp->total && (pointer%temp->numInputs!=1)){
+			if((pointer+temp->numInputs+1)<=temp->total && (pointer%temp->numInputs!=0)){		//If the pointer has down-right number, check it
 				pointerTemp=pointer+temp->numInputs+1;
 				iTemp=0;
 				while(pointerTemp>temp->pixelNum[iTemp]){
@@ -184,30 +187,30 @@ void calculation(struct Data *first){
 					pixelNumTemp[iSec]++;
 				}
 			}
+			//printf("pointer==%d i=%d iSec=%d\n",pointer,i,iSec);
 			pointer++;
 			if(pointer>temp->total){
 				break;
 			}
 			iTemp=0;
+			pointerTemp=pointer;
 			while(pointerTemp>temp->pixelNum[iTemp]){
 				pointerTemp-=temp->pixelNum[iTemp];
 				iTemp++;
 			}
-			pointerTemp=pointer;
-			if(pointerTemp==0){
-				i++;
-			}
-			else if(pointerTemp==temp->numInputs && pointerTemp<(temp->pixelNum[i]-temp->numInputs)){
-				pointer+=temp->pixelNum[i]-pointerTemp-temp->numInputs+1;
+			i=iTemp;
+			if(pointerTemp==temp->numInputs+2 && pointerTemp<(temp->pixelNum[i]-temp->numInputs-1)){
+				pointer+=temp->pixelNum[iTemp]-temp->numInputs-pointerTemp;
 				if(pixelTemp[iSec]==0){
-					pixelNumTemp[iSec]+=temp->pixelNum[i]-pointerTemp-temp->numInputs+1;
+					pixelNumTemp[iSec]+=temp->pixelNum[iTemp]-pointerTemp-temp->numInputs;
 				}
 				else{
 					iSec++;
 					pixelTemp[iSec]=0;
-					pixelNumTemp[iSec]=temp->pixelNum[i]-pointerTemp-temp->numInputs+1;
+					pixelNumTemp[iSec]=temp->pixelNum[iTemp]-pointerTemp-temp->numInputs;
 				}
 			}
+			//printf("pointer==%d i=%d iSec=%d\n",pointer,i,iSec);
 		}
 		temp->pixel=pixelTemp;
 		temp->pixelNum=pixelNumTemp;
@@ -226,6 +229,7 @@ void printOutput(struct Data *first){
 	temp=first;
 	while(1){
 		i=0;
+		printf("%d\n",temp->numInputs);
 		while(1){
 			printf("%d %d\n",temp->pixel[i],temp->pixelNum[i]);
 			temp->total-=temp->pixelNum[i];
